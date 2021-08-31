@@ -1,0 +1,97 @@
+<div class="container px-0">
+  <div class="row">
+    <div class="col-md-3">
+      <%= render "layouts/side", user:@user, book:Book.new %>
+    </div>
+    <div class="col-md-8 offset-md-1">
+      <h2>Books</h2>
+      <%= render 'books/index', books: @books %>
+
+      <div class="d-flex justify-content-center">
+        <h3 class>投稿数の前日比・前週比</h3>
+        <div id="post_book_arrow" class="btn text-success">
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+
+      <script>
+        $(function() {
+          $('#post_book_arrow').on("click",function(){
+            $('#post_book_count').slideToggle();
+          });
+        });
+      </script>
+
+      <div id="post_book_count">
+        <table class="table table-bordered">
+          <tr>
+            <th>今日の投稿数</th>
+            <th>前日の投稿数</th>
+            <th>前日比</th>
+          </tr>
+          <tr>
+            <td><%= @today_book %></td>
+            <td><%= @yesterday_book %></td>
+            <td><%= @user.ratio(@today_book,@yesterday_book) %></td>
+          </tr>
+        </table>
+        <table class="table table-bordered">
+          <tr>
+            <th>今週の投稿数</th>
+            <th>前週の投稿数</th>
+            <th>前週比</th>
+          </tr>
+          <tr>
+            <td><%= @this_week %></td>
+            <td><%= @last_week %></td>
+            <td><%= @user.ratio(@this_week,@last_week) %></td>
+          </tr>
+        </table>
+        <table class="table table-bordered">
+          <tr>
+            <th>6日前</th><th>5日前</th><th>4日前</th><th>3日前</th><th>2日前</th><th>1日前</th><th>今日</th>
+          </tr>
+          <tr>
+            <% 6.downto(0) do |i| %>
+              <td><%= @user.week_date(i) %></td>
+            <% end %>
+          </tr>
+        </table>
+      </div>
+
+      <h3 class="text-center mt-3">- Weekly Chart -</h3>
+      <canvas id="myChart"></canvas>
+      <script>
+      var ctx = document.getElementById("myChart");
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ["6日前", "5日前", "4日前", "3日前", "2日前", "1日前", "今日"],
+          datasets: [{
+            label: '投稿した本の数',
+            backgroundColor: "rgba(0,0,0,0)",
+            borderColor: "green",
+            data: [
+              <%= @user.week_date(6) %>, <%= @user.week_date(5) %>, <%= @user.week_date(4) %>, <%= @user.week_date(3) %>,
+              <%= @user.week_date(2) %>, <%= @user.week_date(1) %>, <%= @user.week_date(0) %>
+            ]
+          }]
+        }
+      });
+      </script>
+      <div>
+        <%= form_with url: search_user_path(@user), local:false do |f| %>
+          <%= f.date_field :content, id:"inputDate" %>
+          <%= f.submit '検索', id:"button1", class:"btn btn-primary" %>
+        <% end %>
+      </div>
+
+      <div class="books_count">
+        <% if @books_count.present? %>
+          <%= render "books_count", books_count: @books_count %>
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>
