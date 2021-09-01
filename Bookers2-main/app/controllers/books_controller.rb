@@ -35,6 +35,7 @@ class BooksController < ApplicationController
       }
     elsif params[:category]
       @books = Book.where(category: params[:category])
+      
     elsif params[:content]
       content = params[:content]
       @books = Book.where("title LIKE ? OR category LIKE ?", "%#{content}%","%#{content}%")
@@ -43,6 +44,8 @@ class BooksController < ApplicationController
     else
       @books = Book.all.order(id: 'DESC')
     end
+    
+    @results = Book.all.map{|book| Hash[tag: book.category, count: 2]}
   end
 
   def show
