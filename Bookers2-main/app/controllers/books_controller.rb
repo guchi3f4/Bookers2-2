@@ -5,6 +5,9 @@ class BooksController < ApplicationController
     @book = Book.new(params_book)
     @book.user = current_user
     if @book.save
+      sent_tags = params[:book][:tag_name].split(',')
+      @book.save_tag(sent_tags)
+
       redirect_to book_path(@book)
       flash[:notice] = "You have created book successfully."
     else
@@ -18,6 +21,9 @@ class BooksController < ApplicationController
 
   def update
     if @book.update(params_book)
+      sent_tags = params[:book][:tag_name].split(',')
+      @book.save_tag(sent_tags)
+
       redirect_to book_path(@book)
       flash[:notice] = "You have updated book successfully."
     else
@@ -33,9 +39,9 @@ class BooksController < ApplicationController
         b.favorites.where(created_at: set_week).size <=>
         a.favorites.where(created_at: set_week).size
       }
-    elsif params[:category]
-      @books = Book.where(category: params[:category])
-      
+    elsif params[:tag]
+      @tag = Tag.find_by(tag_name: params[:tag])
+      @books = @tag.books
     elsif params[:content]
       content = params[:content]
       @books = Book.where("title LIKE ? OR category LIKE ?", "%#{content}%","%#{content}%")
@@ -44,13 +50,14 @@ class BooksController < ApplicationController
     else
       @books = Book.all.order(id: 'DESC')
     end
-    
-    @results = Book.all.map{|book| Hash[tag: book.category, count: 2]}
+
+    @results = Tag.all.map{|tag| Hash[tag: tag.tag_name, count: tag.books.count]}
   end
 
   def show
     @book = Book.find(params[:id])
     @user = @book.user
+    @book_tags = @book.tags
     unless @book.user_id == current_user.id
       @book.book_count += 1
       @book.save
@@ -76,7 +83,7 @@ class BooksController < ApplicationController
   private
 
   def params_book
-    params.require(:book).permit(:title, :body, :evaluation, :category)
+    params.require(:book).permit(:title, :body, :evaluation)
   end
 
   def ensure_correct_user

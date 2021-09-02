@@ -21,9 +21,11 @@
       </div>
       <div class="col-md-2">
         <span class="d-inline-block d-md-none my-2 mr-1">category: </span>
-        <%= link_to books_path(category: book.category) do %>
-          <%= book.category %>
-        <% end %>
+          <% book.tags.each do |tag| %>
+            <%= link_to books_path(tag: tag.tag_name) do %>
+              <%= tag.tag_name %>
+            <% end %>
+          <% end %>
       </div>
       <div class="col-md-6 text-break">
         <%= book.body.truncate(71, omission: '...') %>
@@ -100,7 +102,7 @@
             "dataField": "value"
         });
 
-        series.labels.template.url = "https://e367016fe1e844c2b818277d30c8f55c.vfs.cloud9.us-east-1.amazonaws.com/books?category={word}";
+        series.labels.template.url = "https://e367016fe1e844c2b818277d30c8f55c.vfs.cloud9.us-east-1.amazonaws.com/books?tag={word}";
         series.labels.template.tooltipText = "{word}: {value}";
 
         const hoverState = series.labels.template.states.create("hover");

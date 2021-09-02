@@ -28,8 +28,10 @@
               <%= @book.title %>
           </div>
           <div class="col-md-2">
-            <%= link_to books_path(category: @book.category) do %>
-              <%= @book.category %>
+            <% @book_tags.each do |tag| %>
+              <%= link_to books_path(tag: tag.tag_name) do %>
+                <%= tag.tag_name %>
+              <% end %>
             <% end %>
           </div>
           <div class="col-md-6 text-break">
