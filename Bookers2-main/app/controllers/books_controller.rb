@@ -17,6 +17,8 @@ class BooksController < ApplicationController
   end
 
   def edit
+    @tag_list = @book.tags.pluck(:tag_name).join(',')
+
   end
 
   def update
@@ -51,7 +53,9 @@ class BooksController < ApplicationController
       @books = Book.all.order(id: 'DESC')
     end
 
-    @results = Tag.all.map{|tag| Hash[tag: tag.tag_name, count: tag.books.count]}
+    @results = Tag.all.map do |tag|
+      { tag: tag.tag_name, count: tag.books.count }
+    end
   end
 
   def show

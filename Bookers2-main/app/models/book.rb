@@ -17,15 +17,9 @@ class Book < ApplicationRecord
       TagMap.where(book_id: self.id).destroy_all
     end
 
-    tags = Tag.pluck(:tag_name)
-    new_tags = sent_tags - tags
-    new_tags.each do |tag|
-      Tag.where(tag_id: tag.id).first_or_create
-    end
-
-    tag_list = Tag.where(tag_name: sent_tags)
-    tag_list.each do |tag|
-      TagMap.create(book_id: self.id, tag_id: tag.id)
+    sent_tags.each do |tag|
+      book_tag = Tag.find_or_create_by(tag_name: tag)
+      self.tags << book_tag
     end
   end
 
