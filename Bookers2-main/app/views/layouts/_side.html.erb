@@ -63,37 +63,86 @@
 
 <h2 class="mt-3">New book</h2>
 <%= form_with model: book, local:true do |f| %>
-<div class="form-group">
-  <label>Titel</label>
-  <%= f.text_field :title, class:"form-control" %>
-</div>
-<div class="form-group">
-  <label>Opinion</label>
-  <%= f.text_area :body, class:"form-control" %>
-</div>
-<div class="form-group">
-  <%= f.label :tag_name, 'Tag' %>
-  <%= f.text_field :tag_name, class:"form-control" %>
-</div>
-
-<div class="form-group" id="star">
-  <%= f.label :evaluation, "Rate" %>
-  <%= f.hidden_field :evaluation, id: :review_star %>
+  <div class="form-group">
+    <%= f.label :title, 'Title' %>
+    <%= f.text_field :title, class:"form-control" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :body, 'Ooinion' %>
+    <%= f.text_area :body, class:"form-control" %>
+  </div>
+  <div class="form-group" id="new-tag">
+    <%= f.label :tag_name, 'Tag' %>
+    <%= f.hidden_field :tag_name, "v-model"=>"tags", class:"form-control" %>
+    <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">
+      <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
+        {{tag}}<span class="pl-1" type="button"v-on:click="delTag(tag)">×</span>
+      </div>
+      <input class="border-0" style="outline: 0" type="text" placeholder="ここに追加" v-model="newTag" v-on:keydown.enter="setTag">
+    </div>
+  </div>
   <script>
-    $('#star').empty();
-    $('#star').raty({
-      size     : 36,
-      starOff:  '<%= asset_path('star-off.png') %>',
-      starOn : '<%= asset_path('star-on.png') %>',
-      starHalf: '<%= asset_path('star-half.png') %>',
-      scoreName: 'book[evaluation]',
-      half: true
-    });
+    new Vue ({
+      el: '#new-tag',
+      data () {
+          return {
+            tags:  [],
+            newTag: null,
+          }
+      },
+      methods: {
+        setTag: function (event) {
+          if (event.keyCode !== 13) return
+          var tag = this.newTag;
+          this.tags.push(tag);
+          this.newTag = '';
+        },
+        delTag: function(tag) {
+          this.tags.splice(this.tags.indexOf(tag), 1);
+        },
+      }
+    })
   </script>
-</div>
 
+  <div class="form-group" id="star">
+    <%= f.label :evaluation, "Rate" %>
+    <%= f.hidden_field :evaluation, id: :review_star %>
+    <script>
+      $('#star').empty();
+      $('#star').raty({
+        size     : 36,
+        starOff:  '<%= asset_path('star-off.png') %>',
+        starOn : '<%= asset_path('star-on.png') %>',
+        starHalf: '<%= asset_path('star-half.png') %>',
+        scoreName: 'book[evaluation]',
+        half: true
+      });
+    </script>
+  </div>
 
-<div class="form-group">
-  <%= f.submit "Create Book", class:"btn btn-success" %>
-</div>
+  <div class="form-group">
+    <%= f.button "Create Book", type:"button", onclick:"submit();", class:"btn btn-success" %>
+  </div>
 <% end %>
+<!--<script>-->
+<!--  new Vue ({-->
+<!--    el: '#new-tag',-->
+<!--    data () {-->
+<!--        return {-->
+<!--          tags:  [],-->
+<!--          newTag: null,-->
+<!--        }-->
+<!--    },-->
+<!--    methods: {-->
+<!--      setTag: function (event) {-->
+<!--        if (event.keyCode !== 13) return-->
+<!--        var tag = this.newTag;-->
+<!--        this.tags.push(tag);-->
+<!--        this.newTag = '';-->
+<!--      },-->
+<!--      delTag: function(tag) {-->
+<!--        this.tags.splice(this.tags.indexOf(tag), 1);-->
+<!--      },-->
+<!--    }-->
+<!--  })-->
+<!--</script>-->

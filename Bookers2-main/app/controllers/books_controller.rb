@@ -17,8 +17,7 @@ class BooksController < ApplicationController
   end
 
   def edit
-    @tag_list = @book.tags.pluck(:tag_name).join(',')
-
+    @tag_list = @book.tags.pluck(:tag_name)
   end
 
   def update
