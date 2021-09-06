@@ -12,7 +12,6 @@
       <% end %>
 
       <%= form_with model: @book, local:true do |f| %>
-      <div id="tag_list" data-json="<%=  @tag_list.to_json %>"></div>
       <div class="form-group">
         <%= f.label :title, 'Title' %>
         <%= f.text_field :title, class:"form-control" %>
@@ -25,9 +24,10 @@
       <div class="form-group">
         <%= f.label :tag_name, 'Tag' %>
         <div id="tag">
-          <tag-build></tag-build>
+　　　　  <div id="tag_list" data-json="<%=  @tag_list %>"></div>
+　　　　  <%= javascript_pack_tag 'hello_vue' %>
         </div>
-        <%= javascript_pack_tag 'hello_vue' %>
+
       </div>
 
        <script>

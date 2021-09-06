@@ -1,5 +1,5 @@
 <template>
-  <div id="tag">
+  <div>
     <input type="hidden" id="tag-name" class="form-control" v-model="tags" name="book[tag_name]">
     <div id="tag" class="d-flex flex-wrap align-items-center border rounded py-2 px-1">
       <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
@@ -12,12 +12,19 @@
 
 <script>
   export default ({
-    data: function() {
+    data () {
         return {
-          tags:  JSON.parse(document.getElementById('tag_list').dataset.json),
+          tags: [],
           newTag: null,
         }
     },
+
+　　created: function() {
+　　  if (document.getElementById("tag_list") != null) {
+　　    this.tags = JSON.parse(document.getElementById('tag_list').dataset.json);
+　　  }
+    },
+
     methods: {
       setTag: function (event) {
         if (event.keyCode !== 13) return
