@@ -14,23 +14,3 @@ document.addEventListener('turbolinks:load', () => {
     render: h => h(App)
   }).$mount("#tag")
 })
-
-// var component = {
-//   data: function() {
-//       return {
-//         tags:  JSON.parse(document.getElementById('tag_list').dataset.json),
-//         newTag: null,
-//       }
-//   },
-//   methods: {
-//     setTag: function (event) {
-//       if (event.keyCode !== 13) return
-//       var tag = this.newTag;
-//       this.tags.push(tag);
-//       this.newTag = '';
-//     },
-//     delTag: function(tag) {
-//       this.tags.splice(this.tags.indexOf(tag), 1);
-//     },
-//   }
-// };

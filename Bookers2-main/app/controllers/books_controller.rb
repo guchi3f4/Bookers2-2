@@ -33,7 +33,9 @@ class BooksController < ApplicationController
   end
 
   def index
+
     @book = Book.new
+    @tag_list = Tag.pluck(:tag_name)
     #ソート機能
     if params[:sort] == "favorite_desc"
       @books = Book.all.sort{|a,b|
@@ -44,8 +46,20 @@ class BooksController < ApplicationController
       @tag = Tag.find_by(tag_name: params[:tag])
       @books = @tag.books
     elsif params[:content]
-      content = params[:content]
-      @books = Book.where("title LIKE ? OR category LIKE ?", "%#{content}%","%#{content}%")
+      @tag_names = params[:content].split(',')
+      @tag_count = @tag_names.count
+      @tags = Tag.where(tag_name: @tag_names)
+      # @tag_maps = TagMap.where(tag_id: @tag_ids)
+      # @tag_books = @tags.all.map do |tag|
+      #   tag.books
+      # end
+      # byebug
+      # @books = @tag_books.group(:id).having('count(*) >= 2')
+      @tag_maps = TagMap.where(tag_id: @tags)
+      @book_ids = @tag_maps.pluck(:book_id)
+      @uniq_book_ids = @book_ids.select{ |e| @book_ids.count(e) >= @tag_count }.uniq
+      @books = Book.where(id: @uniq_book_ids)
+      render {@books}
     elsif params[:sort].present?
       @books = Book.all.order(params[:sort])
     else

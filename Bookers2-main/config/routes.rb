@@ -3,6 +3,10 @@ Rails.application.routes.draw do
   root to: "homes#top"
   get "/home/about" => "homes#about"
 
+  namespace :api, format: 'json' do
+    resources :books, only: [:index]
+  end
+
   resources :users, only: [:edit, :update, :index, :show] do
     resource :relationships, only: [:create, :destroy]
     member do
@@ -24,5 +28,5 @@ Rails.application.routes.draw do
     resource :group_users, only: [:create, :destroy]
   end
 
- get '/search' => 'searches#search'
+  get '/search' => 'searches#search'
 end
