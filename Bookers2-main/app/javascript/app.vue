@@ -1,22 +1,36 @@
 <template>
-  <div id="app">
-    <p>{{ message }}</p>
+  <div class="form-group">
+    <vue-simple-suggest
+      v-model="selected"
+      :list="getSuggestionList"
+      :filter-by-query="true">
+      <input type="text" name="tag" id="tag" placeholder="タグを入力してください" autocomplete="off">
+    </vue-simple-suggest>
   </div>
 </template>
 
 <script>
+import VueSimpleSuggest from "vue-simple-suggest";
+import 'vue-simple-suggest/dist/styles.css';
+
 export default {
-  data: function () {
+  components: {
+      VueSimpleSuggest
+  },
+  data() {
     return {
-      message: "Hello Vue!"
+      selected: '',
+      List: '',
+    };
+  },
+  methods: {
+    getSuggestionList (){
+      return [
+          'Vue.js',
+          'React.js',
+          'Angular.js'
+      ]
     }
   }
 }
 </script>
-
-<style scoped>
-p {
-  font-size: 2em;
-  text-align: center;
-}
-</style>

@@ -35,7 +35,7 @@ class BooksController < ApplicationController
   def index
 
     @book = Book.new
-    @tag_list = Tag.pluck(:tag_name)
+    @all_tags = Tag.pluck(:tag_name)
     #ソート機能
     if params[:sort] == "favorite_desc"
       @books = Book.all.sort{|a,b|

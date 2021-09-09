@@ -1,7 +1,7 @@
 <template>
   <div>
     <input type="hidden" id="tag-name" class="form-control" v-model="tags" name="book[tag_name]">
-    <div id="tag" class="d-flex flex-wrap align-items-center border rounded py-2 px-1">
+    <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">
       <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
         {{tag}}<span class="pl-1" type="button"v-on:click="delTag(tag)">×</span>
       </div>

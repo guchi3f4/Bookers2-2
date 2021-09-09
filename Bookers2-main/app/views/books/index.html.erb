@@ -17,62 +17,80 @@
       <%= render "layouts/side", user: current_user, book: @book %>
     </div>
     <div class="col-md-8 offset-md-1">
-
-
-      <!--<%= form_with url: books_path, method: :get, id:'form', local:false do |f| %>-->
-      <form id="form" action="/books" accept-charset="UTF-8" data-remote="true" method="get"><input name="utf8" type="hidden" value="✓">
+      <h2>Tag検索</h2>
+      <%= form_with url: books_path, method: :get, id:'form', local:false do |f| %>
+     <!--   <div id="search">-->
+　　　　　<!--<div id="all-tags" data-json="<%=  @all_tags.to_json%>"></div>-->
+     <!--     <input type="hidden" id="tag-name" class="form-control" v-model="tags" name="content">-->
+     <!--     <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">-->
+     <!--       <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">-->
+     <!--         {{tag}}<span class="pl-1" type="button"v-on:click="delTag(tag)">×</span>-->
+     <!--       </div>-->
+     <!--       <input class="border-0" style="outline: 0" type="text" placeholder="複数選択できます" v-model="newTag" v-on:keydown.enter="setTag"-->
+     <!--       @input='onInput'>-->
+     <!--     </div>-->
+     <!--   </div>-->
         <div id="search">
-          <input type="hidden" id="tag-name" class="form-control" v-model="tags" name="content">
-          <div id="tag" class="d-flex flex-wrap align-items-center border rounded py-2 px-1">
-            <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
-              {{tag}}<span class="pl-1" type="button"v-on:click="delTag(tag)">×</span>
-            </div>
-            <input class="border-0" style="outline: 0" type="text" placeholder="ここに追加" v-model="newTag" v-on:keydown.enter="setTag">
-          </div>
+          <div id="all-tags" data-json="<%=  @all_tags.to_json%>"></div>
+          <%= javascript_pack_tag 'search_vue' %>
         </div>
-　　　　<input type="submit" name="commit" value="検索" id="search-btn" class="btn btn-primary" style="display: none;" data-disable-with="検索">
-       <!-- <div class="form-group">-->
-       <!--   <%= f.submit "検索", type:'hidden', "data-remote":"true", id:"search-btn", class:"btn btn-primary" %>-->
-      　<!--</div>-->
-      </form>
-      <!--<% end %>-->
+        <div class="form-group">
+          <%= f.submit "検索", style:'display: none;', id:"search-btn", class:"btn btn-primary" %>
+      　</div>
+      <% end %>
 
-      <script>
-        new Vue ({
-          el: '#search',
-          data () {
-              return {
-                newTag: null,
-                tags: [],
-              }
-          },
-          methods: {
-            setTag: function (event) {
-              if (event.keyCode !== 13) return
-              var tag = this.newTag;
-              this.tags.push(tag);
-              this.newTag = '';
-            },
-            delTag: function(tag) {
-              this.tags.splice(this.tags.indexOf(tag), 1);
-            },
-          },
-          watch: {
-            tags: function() {
-              setTimeout(function() {
-                // axios.get('books',{
-                //     params: {
-                //       content: '恋愛'
-                //     }
-                //   })
-                // .then(response => console.log(response))
-                // .catch(error => console.log(error))
-                document.getElementById("search-btn").click();
-              }, 1)
-            }
-          }
-        })
-      </script>
+      <!--<script>-->
+      <!--  new Vue ({-->
+      <!--    el: '#search',-->
+      <!--    data () {-->
+      <!--        return {-->
+      <!--          newTag: null,-->
+      <!--          tags: [],-->
+      <!--          allTags: [],-->
+      <!--        }-->
+      <!--    },-->
+
+      <!--    created: function() {-->
+      <!--      this.allTags = JSON.parse(document.getElementById('all-tags').dataset.json);-->
+      <!--    },-->
+
+      <!--    methods: {-->
+      <!--      setTag: function (event) {-->
+      <!--        if (event.keyCode !== 13) return-->
+      <!--        let tag = this.newTag;-->
+      <!--        this.tags.push(tag);-->
+      <!--        this.newTag = '';-->
+      <!--      },-->
+      <!--      delTag: function(tag) {-->
+      <!--        this.tags.splice(this.tags.indexOf(tag), 1);-->
+      <!--      },-->
+      <!--      onInput({target}) {-->
+      <!--        this.newTag = target.value-->
+      <!--      },-->
+      <!--    },-->
+
+      <!--    computed: {-->
+      <!--      filteredTags: function () {-->
+      <!--        let filterTags = [];-->
+      <!--        for (let i in this.allTags) {-->
+      <!--          let tag = this.allTags[i];-->
+      <!--          if (tag.indexOf(this.newTag) !== -1) {-->
+      <!--            filterTags.push(tag);-->
+      <!--          }-->
+      <!--        }-->
+      <!--  　　　return filterTags;-->
+      <!--      }-->
+      <!--    },-->
+
+      <!--    watch: {-->
+      <!--      tags: function() {-->
+      <!--        setTimeout(function() {-->
+      <!--          document.getElementById("search-btn").click();-->
+      <!--        }, 1)-->
+      <!--      }-->
+      <!--    }-->
+      <!--  })-->
+      <!--</script>-->
 
       <!--<script>-->
       <!--  new Vue ({-->
