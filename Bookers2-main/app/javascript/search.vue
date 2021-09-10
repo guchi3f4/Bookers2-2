@@ -5,25 +5,27 @@
       <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
         {{tag}}<span class="pl-1" type="button"v-on:click="delTag(tag)">×</span>
       </div>
-      <input class="border-0" style="outline: 0" type="text" placeholder="複数選択できます" v-model="newTag" v-on:keydown.enter="setTag"
-      @input='onInput'>
+      <input id="field1" class="border-0" style="outline: 0" type="text" placeholder="複数選択できます" v-model="newTag" v-on:keydown.enter="setTag"
+      @input='onInput' autocomplete="off">
     </div>
-    <div v-if="filterTags.length">
-      <div v-for="(tag, index) in filterTags">
-        <div @click='selectTag(index)' v-bind:key="tag.index" v-text="tag"></div>
+    <div v-if="allTags.length && open">
+      <div v-for="(tag, index) in allTags">
+        <div id='select-tags' @click='selectTag(index)' v-bind:key="tag.index" v-text="tag" style="cursor: pointer"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import axios from 'axios'
+
   export default {
     data () {
         return {
-          newTag: null,
+          newTag: '',
           tags: [],
-          allTags: JSON.parse(document.getElementById('all-tags').dataset.json),
-          filterTags: [],
+          allTags: [],
+          open: false,
         }
     },
 
@@ -37,42 +39,43 @@
       delTag: function(tag) {
         this.tags.splice(this.tags.indexOf(tag), 1);
       },
+
       onInput({target}) {
         this.newTag = target.value
-        if (this.newTag.length >= 1) {
-          for (let i in this.allTags) {
-            let tag = this.allTags[i];
-            if (tag.indexOf(this.newTag) !== -1) {
-              this.filterTags.push(tag);
+        if (this.newTag != '') {
+          axios.get("/api/books", {
+            params: { keyword: this.newTag }
+          })
+          .then(response => {
+            this.allTags = response.data;
+            if (this.allTags) {
+              this.open = true;
             }
-          }
+          })
         }
-        return this.filterTags
+        if (this.newTag == '') {
+          setTimeout(() => {
+            this.open = false;
+          }, 200)
+        }
       },
+
       selectTag(index) {
-        this.newTag = this.filterTags[index]
+        this.tags.push(this.allTags[index]);
+        this.newTag = '';
+        setTimeout(() => {
+          this.open = false;
+        }, 300)
+        document.getElementById("field1").focus()
       }
     },
-
-    // computed: {
-    //   filteredTags: function () {
-    //     let filterTags = [];
-    //     for (let i in this.allTags) {
-    //       let tag = this.allTags[i];
-    //       if (tag.indexOf(this.newTag) !== -1) {
-    //         filterTags.push(tag);
-    //         this.open = true
-    //       }
-    //     }
-  　　// 　return filterTags;
-    //   }
-    // },
 
     watch: {
       tags: function() {
         setTimeout(function() {
           document.getElementById("search-btn").click();
         }, 1)
+        document.getElementById("field1").focus()
       }
     }
   }
