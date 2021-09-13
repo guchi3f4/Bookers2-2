@@ -9,8 +9,11 @@
       @input='onInput' autocomplete="off">
     </div>
     <div v-if="allTags.length && open">
-      <div v-for="(tag, index) in allTags">
-        <div id='select-tags' @click='selectTag(index)' v-bind:key="tag.index" v-text="tag" style="cursor: pointer"></div>
+      <div class='d-flex mt-2 p-2 border '>
+        <div v-for="(tag2, index) in allTags" id='select-tags' class ="btn btn-primary rounded-pill mr-1 py-0"
+          @click='selectTag(index)' v-bind:key="tag2.index" style="cursor: pointer">
+          {{tag2}}
+        </div>
       </div>
     </div>
   </div>
