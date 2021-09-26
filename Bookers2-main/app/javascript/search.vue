@@ -38,6 +38,9 @@
         let tag = this.newTag;
         this.tags.push(tag);
         this.newTag = '';
+        setTimeout(() => {
+          this.open = false;
+        }, 300)
       },
       delTag: function(tag) {
         this.tags.splice(this.tags.indexOf(tag), 1);

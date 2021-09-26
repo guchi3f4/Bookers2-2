@@ -44,7 +44,7 @@ class BooksController < ApplicationController
       }
     elsif params[:tag]
       @tag = Tag.find_by(tag_name: params[:tag])
-      @books = @tag.books
+      @books = @tag.books.page(params[:page]).per(10)
     elsif params[:content]
       @tag_names = params[:content].split(',')
       @tag_count = @tag_names.count
@@ -58,16 +58,21 @@ class BooksController < ApplicationController
       @tag_maps = TagMap.where(tag_id: @tags)
       @book_ids = @tag_maps.pluck(:book_id)
       @uniq_book_ids = @book_ids.select{ |e| @book_ids.count(e) >= @tag_count }.uniq
-      @books = Book.where(id: @uniq_book_ids)
-      render {@books}
+      @books = Book.where(id: @uniq_book_ids).page(params[:page]).per(1)
+      # render {@books}
     elsif params[:sort].present?
-      @books = Book.all.order(params[:sort])
+      @books = Book.order(params[:sort]).page(params[:page]).per(10)
     else
-      @books = Book.all.order(id: 'DESC')
+      @books = Book.order(id: 'DESC').page(params[:page]).per(10)
     end
 
     @results = Tag.all.map do |tag|
       { tag: tag.tag_name, count: tag.books.count }
+    end
+
+    respond_to do |format|
+      format.html
+      format.js
     end
   end
 
