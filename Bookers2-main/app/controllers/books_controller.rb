@@ -42,6 +42,7 @@ class BooksController < ApplicationController
         b.favorites.where(created_at: set_week).size <=>
         a.favorites.where(created_at: set_week).size
       }
+      render "index"
     elsif params[:tag]
       @tag = Tag.find_by(tag_name: params[:tag])
       @books = @tag.books
@@ -59,9 +60,13 @@ class BooksController < ApplicationController
       @book_ids = @tag_maps.pluck(:book_id)
       @uniq_book_ids = @book_ids.select{ |e| @book_ids.count(e) >= @tag_count }.uniq
       @books = Book.where(id: @uniq_book_ids)
-      render {@books}
+      if params[:sort].present?
+        @books = Book.where(id: @uniq_book_ids).order(params[:sort])
+      end
+      render 'index'
     elsif params[:sort].present?
       @books = Book.all.order(params[:sort])
+      render 'index'
     else
       @books = Book.all.order(id: 'DESC')
     end

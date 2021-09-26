@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_01_110510) do
+ActiveRecord::Schema.define(version: 2021_09_13_045126) do
 
   create_table "books", force: :cascade do |t|
     t.string "title"
@@ -22,10 +22,18 @@ ActiveRecord::Schema.define(version: 2021_09_01_110510) do
     t.string "category"
     t.integer "book_count", default: 0
     t.integer "category_id"
+    t.integer "top_tag_id"
   end
 
   create_table "categories", force: :cascade do |t|
     t.string "tag"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "categorizations", force: :cascade do |t|
+    t.integer "top_tag_id"
+    t.integer "tag_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -106,6 +114,12 @@ ActiveRecord::Schema.define(version: 2021_09_01_110510) do
 
   create_table "tags", force: :cascade do |t|
     t.string "tag_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "top_tags", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

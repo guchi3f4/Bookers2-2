@@ -1,5 +1,7 @@
 <template>
   <div>
+    <a data-remote="true" v-bind:href="'/books?sort=evaluation+DESC&content=' + link">評価が高い順</a>
+
     <input type="hidden" id="tag-name" class="form-control" v-model="tags" name="content">
     <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">
       <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
@@ -29,6 +31,7 @@
           tags: [],
           allTags: [],
           open: false,
+          link: '',
         }
     },
 
@@ -38,6 +41,9 @@
         let tag = this.newTag;
         this.tags.push(tag);
         this.newTag = '';
+        setTimeout(() => {
+          this.open = false;
+        }, 300)
       },
       delTag: function(tag) {
         this.tags.splice(this.tags.indexOf(tag), 1);
@@ -56,11 +62,6 @@
             }
           })
         }
-        if (this.newTag == '') {
-          setTimeout(() => {
-            this.open = false;
-          }, 200)
-        }
       },
 
       selectTag(index) {
@@ -78,6 +79,7 @@
         setTimeout(function() {
           document.getElementById("search-btn").click();
         }, 1)
+        this.link = this.tags
         document.getElementById("field1").focus()
       }
     }
