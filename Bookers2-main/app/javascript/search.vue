@@ -8,6 +8,8 @@
       <input id="field1" class="border-0" style="outline: 0" type="text" placeholder="複数選択できます" v-model="newTag" v-on:keydown.enter="setTag"
       @input='onInput' autocomplete="off">
     </div>
+
+    <!--補完部分の表示-->
     <div v-if="allTags.length && open">
       <div class='d-flex mt-2 p-2 border '>
         <div v-for="(tag2, index) in allTags" id='select-tags' class ="btn btn-primary rounded-pill mr-1 py-0"
@@ -33,8 +35,9 @@
     },
 
     methods: {
+      // エンターキー押下時
       setTag: function (event) {
-        if (event.keyCode !== 13) return
+        if (event.keyCode !== 13 || this.newTag == '') return
         let tag = this.newTag;
         this.tags.push(tag);
         this.newTag = '';
@@ -46,6 +49,7 @@
         this.tags.splice(this.tags.indexOf(tag), 1);
       },
 
+      // 補完情報の取得
       onInput({target}) {
         this.newTag = target.value
         if (this.newTag != '') {
@@ -66,6 +70,7 @@
         }
       },
 
+      // 補完項目の選択
       selectTag(index) {
         this.tags.push(this.allTags[index]);
         this.newTag = '';
