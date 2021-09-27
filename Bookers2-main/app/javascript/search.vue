@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">
+      <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
+        {{tag}}<span class="pl-1" type="button"v-on:click="delTag(tag)">×</span>
+      </div>
+      <input id="top-field" class="border-0" style="outline: 0" type="text" autocomplete="off" placeholder="一つ選択できます">
+    </div>
     <input type="hidden" id="tag-name" class="form-control" v-model="tags" name="content">
     <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">
       <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
