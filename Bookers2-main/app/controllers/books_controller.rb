@@ -2,6 +2,7 @@ class BooksController < ApplicationController
   before_action :ensure_correct_user, only: [:edit, :update, :destroy]
 
   def create
+    @top_tag = TopTag.find_or_create_by(name: params[:name])
     @book = Book.new(params_book)
     @book.user = current_user
     if @book.save
@@ -11,7 +12,7 @@ class BooksController < ApplicationController
       redirect_to book_path(@book)
       flash[:notice] = "You have created book successfully."
     else
-      @books = Book.all
+      @books = Book.order(id: 'DESC').page(params[:page]).per(10)
       render :index
     end
   end
@@ -105,7 +106,7 @@ class BooksController < ApplicationController
   private
 
   def params_book
-    params.require(:book).permit(:title, :body, :evaluation)
+    params.require(:book).permit(:title, :body, :evaluation).merge(top_tag_id: @top_tag.id)
   end
 
   def ensure_correct_user

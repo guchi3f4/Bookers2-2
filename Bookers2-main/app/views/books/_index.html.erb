@@ -23,6 +23,9 @@
         <% end %>
       </div>
       <div class="col-md-2">
+        <%= book.top_tag.name %>
+      </div>
+      <div class="col-md-2">
         <span class="d-inline-block d-md-none my-2 mr-1">category: </span>
           <% book.tags.each do |tag| %>
             <%= link_to books_path(tag: tag.tag_name) do %>
@@ -30,7 +33,7 @@
             <% end %>
           <% end %>
       </div>
-      <div class="col-md-6 text-break">
+      <div class="col-md-4 text-break">
         <%= book.body.truncate(71, omission: '...') %>
       </div>
     </div>
