@@ -1,11 +1,14 @@
 <template>
   <div>
-    <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">
-      <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
-        {{tag}}<span class="pl-1" type="button"v-on:click="delTag(tag)">×</span>
-      </div>
-      <input id="top-field" class="border-0" style="outline: 0" type="text" autocomplete="off" placeholder="一つ選択できます">
-    </div>
+    <!--<div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">-->
+    <!--  <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="topTag in topTags">-->
+    <!--    {{topTag}}<span class="pl-1" type="button" v-on:click="delTopTag(topTag)">×</span>-->
+    <!--  </div>-->
+    <!--  <input id="top-field" class="border-0" style="outline: 0" type="text" autocomplete="off" placeholder="一つ選択できます"-->
+    <!--    v-model='newTopTag' v-on:keydown.enter="setTopTag"-->
+    <!--  >-->
+    <!--</div>-->
+
     <input type="hidden" id="tag-name" class="form-control" v-model="tags" name="content">
     <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">
       <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">
@@ -33,7 +36,9 @@
   export default {
     data () {
         return {
+          newTopTag: '',
           newTag: '',
+          topTags: [],
           tags: [],
           allTags: [],
           open: false,
@@ -41,7 +46,20 @@
     },
 
     methods: {
-      // エンターキー押下時
+      // setTopTag: function (event) {
+      //   if (event.keyCode !== 13 || this.newTopTag == '') return
+      //   let topTag = this.newTopTag;
+      //   this.topTags.push(topTag);
+      //   this.newTopTag = '';
+      //   setTimeout(() => {
+      //     this.topOpen = false;
+      //   }, 300)
+      // },
+      // delTopTag: function(topTag) {
+      //   this.topTags.splice(this.topTags.indexOf(topTag), 1);
+      // },
+
+　　　// エンターキー押下時
       setTag: function (event) {
         if (event.keyCode !== 13 || this.newTag == '') return
         let tag = this.newTag;

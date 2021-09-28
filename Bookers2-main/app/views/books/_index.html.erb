@@ -1,13 +1,31 @@
+<ul class="nav nav-tabs mb-2">
+  <% if @tag_names.present? %>
+    <% if @tag_names.count == 1 %>
+      <li class="nav-item">
+        <%= link_to books_path(content: params[:content]), remote:true do %>
+          <p class="nav-link active" data-toggle="tab">”<%= params[:content] %>” に関する記事</p>
+        <% end %>
+      </li>
+      <li class="nav-item">
+        <%= link_to books_path(content: params[:content], page_flag: 'change' ), remote:true do %>
+          <p class="nav-link" data-toggle="tab">”<%= params[:content] %>” を含む記事</p>
+        <% end %>
+      </li>
+    <% elsif @tag_names.count >= 2 %>
+      <li class="nav-item">
+        <%= link_to books_path(content: params[:content]), remote:true do %>
+          <p class="nav-link active" data-toggle="tab">”<%= params[:content] %>” を全て含む記事</p>
+        <% end %>
+      </li>
+      <li class="nav-item">
+        <%= link_to books_path(content: params[:content], page_flag: 'change' ), remote:true do %>
+          <p class="nav-link" data-toggle="tab">”<%= params[:content] %>” を一部含む記事（関連度順）</p>
+        <% end %>
+      </li>
+    <% end %>
+  <% end %>
+</ul>
 
-
-<table class="table mb-0 book-table">
-  <tr>
-    <th class='col-2'></th>
-    <th class='col-2'>Title</th>
-    <th class='col-2'>Category</th>
-    <th class='col-6'>Opinion</th>
-  </tr>
-</table>
 
 <% books.each do |book|%>
   <div class="container mb-3 py-3 rounded book-item">
@@ -191,60 +209,60 @@
 <!--<% end %>-->
 
 <!-- Styles -->
-<style>
-    #chartdiv {
-        width: 100%;
-        height: 600px;
-    }
-</style>
+<!--<style>-->
+<!--    #chartdiv {-->
+<!--        width: 100%;-->
+<!--        height: 600px;-->
+<!--    }-->
+<!--</style>-->
 
 
 <!-- HTML -->
-<div id="tag_info" data-json="<%=  @results.to_json %>"></div>
-<div id="chartdiv"></div>
+<!--<div id="tag_info" data-json="<%=  @results.to_json %>"></div>-->
+<!--<div id="chartdiv"></div>-->
 
 
 
 <!-- Chart code -->
-<script>
-    am4core.ready(function() {
+<!--<script>-->
+<!--    am4core.ready(function() {-->
 
         // Themes begin
-        am4core.useTheme(am4themes_animated);
+<!--        am4core.useTheme(am4themes_animated);-->
         // Themes end
 
-        const chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
-        chart.fontFamily = "Courier New";
-        const series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
-        series.randomness = 0.1;
-        series.rotationThreshold = 0.5;
+<!--        const chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);-->
+<!--        chart.fontFamily = "Courier New";-->
+<!--        const series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());-->
+<!--        series.randomness = 0.1;-->
+<!--        series.rotationThreshold = 0.5;-->
 
-        series.data = JSON.parse(document.getElementById('tag_info').dataset.json);
+<!--        series.data = JSON.parse(document.getElementById('tag_info').dataset.json);-->
 
-        series.dataFields.word = "tag";
-        series.dataFields.value = "count";
+<!--        series.dataFields.word = "tag";-->
+<!--        series.dataFields.value = "count";-->
 
-        series.heatRules.push({
-            "target": series.labels.template,
-            "property": "fill",
-            "min": am4core.color("#0000CC"),
-            "max": am4core.color("#CC00CC"),
-            "dataField": "value"
-        });
+<!--        series.heatRules.push({-->
+<!--            "target": series.labels.template,-->
+<!--            "property": "fill",-->
+<!--            "min": am4core.color("#0000CC"),-->
+<!--            "max": am4core.color("#CC00CC"),-->
+<!--            "dataField": "value"-->
+<!--        });-->
 
-        series.labels.template.url = "https://e367016fe1e844c2b818277d30c8f55c.vfs.cloud9.us-east-1.amazonaws.com/books?tag={word}";
-        series.labels.template.tooltipText = "{word}: {value}";
+<!--        series.labels.template.url = "https://e367016fe1e844c2b818277d30c8f55c.vfs.cloud9.us-east-1.amazonaws.com/books?tag={word}";-->
+<!--        series.labels.template.tooltipText = "{word}: {value}";-->
 
-        const hoverState = series.labels.template.states.create("hover");
-        hoverState.properties.fill = am4core.color("#FF0000");
+<!--        const hoverState = series.labels.template.states.create("hover");-->
+<!--        hoverState.properties.fill = am4core.color("#FF0000");-->
 
-        const subtitle = chart.titles.create();
-        subtitle.text = "(click to open)";
+<!--        const subtitle = chart.titles.create();-->
+<!--        subtitle.text = "(click to open)";-->
 
-        const title = chart.titles.create();
-        title.text = "Most Popular Tags @ StackOverflow";
-        title.fontSize = 20;
-        title.fontWeight = "800";
+<!--        const title = chart.titles.create();-->
+<!--        title.text = "Most Popular Tags @ StackOverflow";-->
+<!--        title.fontSize = 20;-->
+<!--        title.fontWeight = "800";-->
 
     }); // end am4core.ready()
-</script>
+<!--</script>-->

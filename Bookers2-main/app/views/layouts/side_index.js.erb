@@ -1,0 +1,2 @@
+$(".book-list").html("<%= j(render 'books/index', books: @books) %>");
+$(".book-side-bar").html("<%= j(render 'layouts/side', user: current_user, book: @book) %>");

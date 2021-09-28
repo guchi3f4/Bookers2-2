@@ -1,5 +1,70 @@
-<h2>User info</h2>
+<div class='my-4'>
+  <h5>派生するタグ</h5>
+  <!-- Styles -->
+  <style>
+    #chartdiv {
+      width: 100%;
+      height: 400px;
+    }
+  </style>
 
+
+  <!-- HTML -->
+  <div id="tag_info" data-json="<%=  @results.to_json %>"></div>
+  <div id="chartdiv"></div>
+
+
+
+  <!-- Chart code -->
+  <script>
+      am4core.ready(function() {
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        const chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
+        chart.fontFamily = "Courier New";
+        const series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+        series.randomness = 0.1;
+        series.rotationThreshold = 0.5;
+
+        series.data = JSON.parse(document.getElementById('tag_info').dataset.json);
+
+        series.dataFields.word = "tag";
+        series.dataFields.value = "count";
+
+        series.maxFontSize = am4core.percent(20);
+        series.minFontSize = am4core.percent(5);
+
+        series.heatRules.push({
+            "target": series.labels.template,
+            "property": "fill",
+            "min": am4core.color("#0000CC"),
+            "max": am4core.color("#CC00CC"),
+            "dataField": "value"
+        });
+
+        series.labels.template.url = "https://e367016fe1e844c2b818277d30c8f55c.vfs.cloud9.us-east-1.amazonaws.com/books?tag={word}";
+        series.labels.template.tooltipText = "{word}: {value}";
+
+        const hoverState = series.labels.template.states.create("hover");
+        hoverState.properties.fill = am4core.color("#FF0000");
+
+        const subtitle = chart.titles.create();
+        // subtitle.text = "(click to open)";
+
+        // const title = chart.titles.create();
+        // title.text = "派生するタグ";
+        // title.fontSize = 20;
+        // title.fontWeight = "800";
+
+    }); // end am4core.ready()
+  </script>
+</div>
+
+
+<h2>User info</h2>
 <%= attachment_image_tag user, :profile_image, :fill, 100, 100, fallback: "no_image.jpg" %>
 <table class="table">
   <tr>
