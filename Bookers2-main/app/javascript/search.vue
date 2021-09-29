@@ -91,7 +91,7 @@
           this.error = ''
         }
         if (this.newTag != '') {
-          axios.get("/api/books", {ら
+          axios.get("/api/books", {
             params: { keyword: this.newTag }
           })
           .then(response => {
