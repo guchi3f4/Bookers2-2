@@ -27,6 +27,7 @@
         </div>
       </div>
     </div>
+    <p>{{error}}</p>
   </div>
 </template>
 
@@ -42,6 +43,7 @@
           tags: [],
           allTags: [],
           open: false,
+          error: ''
         }
     },
 
@@ -61,7 +63,16 @@
 
 　　　// エンターキー押下時
       setTag: function (event) {
-        if (event.keyCode !== 13 || this.newTag == '') return
+        if (event.keyCode !== 13 || this.newTag === '') return
+        if (this.allTags == '') {
+          return this.error = 'このタグは存在しません'
+        }
+        if (this.tags.indexOf(this.newTag) !== -1) {
+          return this.error = 'このタグはすでに入力済みです',
+          setTimeout(() => {
+            this.open = false;
+          }, 300)
+        }
         let tag = this.newTag;
         this.tags.push(tag);
         this.newTag = '';
@@ -76,8 +87,11 @@
       // 補完情報の取得
       onInput({target}) {
         this.newTag = target.value
+        if (this.error.length) {
+          this.error = ''
+        }
         if (this.newTag != '') {
-          axios.get("/api/books", {
+          axios.get("/api/books", {ら
             params: { keyword: this.newTag }
           })
           .then(response => {
@@ -96,11 +110,14 @@
 
       // 補完項目の選択
       selectTag(index) {
+        if (this.tags.indexOf(this.allTags[index]) !== -1) {
+          setTimeout(() => {
+            this.open = false;
+          }, 300)
+          return this.error = 'このタグはすでに入力済みです'
+        }
         this.tags.push(this.allTags[index]);
         this.newTag = '';
-        setTimeout(() => {
-          this.open = false;
-        }, 300)
         document.getElementById("field1").focus()
       }
     },
