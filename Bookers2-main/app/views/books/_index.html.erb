@@ -3,23 +3,23 @@
     <% if @tag_names.count == 1 %>
       <li class="nav-item">
         <%= link_to books_path(content: params[:content]), remote:true do %>
-          <p class="nav-link active" data-toggle="tab">”<%= params[:content] %>” に関する記事</p>
+          <p class="nav-link <%= "active" if params[:page_flag] != 'change2' %>" data-toggle="tab">”<%= params[:content] %>” に関する記事</p>
         <% end %>
       </li>
       <li class="nav-item">
-        <%= link_to books_path(content: params[:content], page_flag: 'change' ), remote:true do %>
-          <p class="nav-link" data-toggle="tab">”<%= params[:content] %>” を含む記事</p>
+        <%= link_to books_path(content: params[:content], page_flag: 'change2' ), remote:true do %>
+          <p class="nav-link <%= "active" if params[:page_flag] == 'change2' %>" data-toggle="tab">”<%= params[:content] %>” を含む記事</p>
         <% end %>
       </li>
     <% elsif @tag_names.count >= 2 %>
       <li class="nav-item">
         <%= link_to books_path(content: params[:content]), remote:true do %>
-          <p class="nav-link active" data-toggle="tab">”<%= params[:content] %>” を全て含む記事</p>
+          <p class="nav-link <%= "active" if params[:page_flag] != 'change4' %>" data-toggle="tab">”<%= params[:content] %>” を全て含む記事</p>
         <% end %>
       </li>
       <li class="nav-item">
-        <%= link_to books_path(content: params[:content], page_flag: 'change' ), remote:true do %>
-          <p class="nav-link" data-toggle="tab">”<%= params[:content] %>” を一部含む記事（関連度順）</p>
+        <%= link_to books_path(content: params[:content], page_flag: 'change4' ), remote:true do %>
+          <p class="nav-link <%= "active" if params[:page_flag] == 'change4' %>" data-toggle="tab">”<%= params[:content] %>” を一部含む記事（関連度順）</p>
         <% end %>
       </li>
     <% end %>

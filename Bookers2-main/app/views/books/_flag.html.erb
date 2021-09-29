@@ -1,0 +1,5 @@
+<% if params[:page_flag] == 'change2' %>
+  <%= hidden_field_tag :page_flag, 'change2' %>
+<% elsif params[:page_flag] == 'change4' %>
+  <%= hidden_field_tag :page_flag, 'change4' %>
+<% end %>

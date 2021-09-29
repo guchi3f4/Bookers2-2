@@ -19,24 +19,17 @@
     <div class="col-md-8 offset-md-1">
       <h2>Tag検索</h2>
       <%= form_with url: books_path, method: :get, id:'form', local:false do |f| %>
-     <!--   <div id="search">-->
-　　　　　<!--<div id="all-tags" data-json="<%=  @all_tags.to_json%>"></div>-->
-     <!--     <input type="hidden" id="tag-name" class="form-control" v-model="tags" name="content">-->
-     <!--     <div class="d-flex flex-wrap align-items-center border rounded py-2 px-1">-->
-     <!--       <div class="badge badge-primary badge-pill mr-1" style="font-size: 100%;" v-for="tag in tags">-->
-     <!--         {{tag}}<span class="pl-1" type="button"v-on:click="delTag(tag)">×</span>-->
-     <!--       </div>-->
-     <!--       <input class="border-0" style="outline: 0" type="text" placeholder="複数選択できます" v-model="newTag" v-on:keydown.enter="setTag"-->
-     <!--       @input='onInput'>-->
-     <!--     </div>-->
-     <!--   </div>-->
+        <div class="page-flag">
+          <%= render 'books/flag' %>
+        </div>
+
         <div id="search">
           <div id="all-tags" data-json="<%=  @all_tags.to_json%>"></div>
           <%= javascript_pack_tag 'search_vue' %>
         </div>
         <div class="form-group">
           <%= f.submit "検索", style:'display: none;', id:"search-btn", class:"btn btn-primary" %>
-      　</div>
+        </div>
       <% end %>
 
       <!--<script>-->

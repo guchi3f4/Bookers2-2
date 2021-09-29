@@ -34,10 +34,6 @@ class BooksController < ApplicationController
   end
 
   def index
-    @ids = [55, 19, 44]
-    Book.where(id: @ids).order("field(id, #{@ids.join(',')})")
-    Book.where(id: @ids).order([Arel.sql('field(id, ?)'), @ids]).each do |u| pp u.id end
-    byebug
     @book = Book.new
     @all_tags = Tag.pluck(:tag_name)
     #ソート機能
@@ -53,9 +49,10 @@ class BooksController < ApplicationController
       @tag_names = params[:content].split(',')
       @tags = Tag.where(tag_name: @tag_names)
       if @tag_names.count == 1
-        if params[:page_flag].present?
+        if params[:page_flag] == 'change2'
           @tag = Tag.find_by(tag_name: params[:content])
           @books = @tag.books.page(params[:page]).per(7)
+          render :flag and return
         else
           @top_tag = TopTag.find_by(name: params[:content])
           @books = @top_tag.books.page(params[:page]).per(7)
@@ -63,14 +60,17 @@ class BooksController < ApplicationController
       else
         @tag_maps = TagMap.where(tag_id: @tags)
         @book_ids = @tag_maps.pluck(:book_id)
-        if params[:page_flag].present?
+        if params[:page_flag] == 'change4'
           itself_book_ids  = @book_ids.group_by(&:itself)
           hash_book_ids = itself_book_ids.map{ |key, value| [key, value.count] }.to_h
-          sort_ids = hash_book_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
-          # @aaa = Book.where(id: sort_ids.keys).order(Arel.sql("FIELD(id, #{sort_ids.keys.join(',')})"))
+          select_book_ids = hash_book_ids.select {|key, value| value >= 2 }
+          sort_ids = select_book_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
+          books = Book.where(id: sort_ids.keys).sort_by{ |a| sort_ids.keys.index(a.id)}
+          @books = Kaminari.paginate_array(books).page(params[:page]).per(7)
+          render :flag and return
         else
           @uniq_book_ids = @book_ids.select{ |e| @book_ids.count(e) >= @tag_names.count  }.uniq
-          @books = Book.where(id: @uniq_book_ids).page(params[:page]).per(1)
+          @books = Book.where(id: @uniq_book_ids).page(params[:page]).per(2)
         end
       end
       @results = @tags.all.map do |tag|
