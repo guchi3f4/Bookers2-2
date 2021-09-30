@@ -7,10 +7,10 @@ class BooksController < ApplicationController
     @book.user = current_user
     if @book.save
       sent_tags = params[:book][:tag_name].split(',')
-      @book.save_tag(sent_tags)
+      @tag_maps = @book.save_tag(sent_tags)
 
-      @tag_relations = @book.tags.map do |book_tag|
-        @top_tag.tag_relations.find_or_create_by(tag_id: book_tag.id)
+      @tag_relations = @tag_maps.map do |tag_map|
+        @top_tag.tag_relations.find_or_create_by(tag_id: tag_map.tag_id)
       end
       @tag_relations.map do |tag|
         tag.update(registration_num: tag.registration_num += 1)
@@ -28,13 +28,37 @@ class BooksController < ApplicationController
 
   def edit
     @tag_list = @book.tags.pluck(:tag_name)
+    @top_tag = @book.top_tag
   end
 
   def update
+    @before_top_tag = @book.top_tag
+    if @before_top_tag.present?
+      @before_tag_relations = @before_top_tag.tag_relations.where(tag_id: @book.tags)
+      if @before_tag_relations.present?
+        @before_tag_relations.map do |relation|
+          relation.update(registration_num: relation.registration_num -= 1)
+        end
+      end
+    end
+    @top_tag = TopTag.find_or_create_by(name: params[:name])
     if @book.update(params_book)
       sent_tags = params[:book][:tag_name].split(',')
-      @book.save_tag(sent_tags)
+      # @tag_maps = @book.save_tag(sent_tags)
+      if @book.tags.present?
+        TagMap.where(book_id:  @tag_maps.id).destroy_all
+      end
 
+      @tag_maps = sent_tags.map do |tag|
+        book_tag = Tag.find_or_create_by(tag_name: tag)
+        @book.tag_maps.find_or_create_by(tag_id: book_tag.id)
+      end
+      @tag_relations = @tag_maps.map do |tag_map|
+        @top_tag.tag_relations.find_or_create_by(tag_id: tag_map.tag_id)
+      end
+      @tag_relations.map do |tag|
+        tag.update(registration_num: tag.registration_num += 1)
+      end
       redirect_to book_path(@book)
       flash[:notice] = "You have updated book successfully."
     else
@@ -79,7 +103,7 @@ class BooksController < ApplicationController
           itself_book_ids  = @book_ids.group_by(&:itself)
           hash_book_ids = itself_book_ids.map{ |key, value| [key, value.count] }.to_h
           select_book_ids = hash_book_ids.select {|key, value| value >= 2 }
-          sort_ids = select_book_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
+          sort_ids = seclect_book_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
           books = Book.where(id: sort_ids.keys).sort_by{ |a| sort_ids.keys.index(a.id)}
           @books = Kaminari.paginate_array(books).page(params[:page]).per(7)
         else

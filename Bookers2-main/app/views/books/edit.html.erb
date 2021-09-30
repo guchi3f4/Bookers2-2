@@ -10,7 +10,6 @@
         <% end %>
       </ul>
       <% end %>
-
       <%= form_with model: @book, local:true do |f| %>
       <div class="form-group">
         <%= f.label :title, 'Title' %>
@@ -20,7 +19,10 @@
         <%= f.label :body, 'Opinion' %>
         <%= f.text_area :body, class:"form-control" %>
       </div>
-
+      <div class='form-group'>
+        <%= label_tag :name,'Top Tag' %>
+        <%= text_field_tag :name, @top_tag.name, class:"form-control" %>
+      </div>
       <div class="form-group">
         <%= f.label :tag_name, 'Tag' %>
         <div id="tag">

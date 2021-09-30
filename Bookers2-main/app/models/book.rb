@@ -21,7 +21,7 @@ class Book < ApplicationRecord
 
     sent_tags.map do |tag|
       book_tag = Tag.find_or_create_by(tag_name: tag)
-      self.tags << book_tag
+      self.tag_maps.find_or_create_by(tag_id: book_tag.id)
     end
   end
 
