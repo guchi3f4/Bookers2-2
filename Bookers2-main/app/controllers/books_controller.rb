@@ -86,8 +86,13 @@ class BooksController < ApplicationController
           @uniq_book_ids = @book_ids.select{ |e| @book_ids.count(e) >= @tag_names.count  }.uniq
           @books = Book.where(id: @uniq_book_ids).page(params[:page]).per(2)
         end
-        @results = Tag.all.map do |tag|
-          { tag: tag.tag_name, count: tag.books.count }
+        @tag_relations = TagRelation.where(tag_id: @tags)
+        @top_tags = @tag_relations.all.map do |relation|
+          relation.top_tag
+        end
+        @uniq_top_tags  = @top_tags.uniq
+        @results = @uniq_top_tags.map do |top_tag|
+          { tag: top_tag.name, count: top_tag.books.count }
         end
       end
       # render {@books}

@@ -1,14 +1,31 @@
-         ___        ______     ____ _                 _  ___  
-        / \ \      / / ___|   / ___| | ___  _   _  __| |/ _ \ 
-       / _ \ \ /\ / /\___ \  | |   | |/ _ \| | | |/ _` | (_) |
-      / ___ \ V  V /  ___) | | |___| | (_) | |_| | (_| |\__, |
-     /_/   \_\_/\_/  |____/   \____|_|\___/ \__,_|\__,_|  /_/ 
- ----------------------------------------------------------------- 
+# codience
 
+## サイト概要
+プログラミング関連の参考になった記事を紹介、共有するsnsサイトです。
 
-Hi there! Welcome to AWS Cloud9!
+### サイトテーマ
+参考記事を管理し共有し合う
 
-To get started, create some files, play with the terminal,
-or visit https://docs.aws.amazon.com/console/cloud9/ for our documentation.
+### テーマを選んだ理由
+プログラミングの勉強中たくエラー解決や機能実装するために多くの記事を参考にしました。その際、参考になったサイトをお気に入り登録をしていましたが
+数が増えるにつれどれが何の記事かわからなくなりまた。そのため記事にタグを振って管理し、なおかつ多数のユーザと共有できれば便利だと思いこのテーマにしました。
 
-Happy coding!
+### ターゲットユーザ
+未経験や初心者のエンジニア、初学者の方
+
+### 主な利用シーン
+参考にした記事の管理、他ユーザーが共有している参考記事の検索、閲覧
+
+## 設計書
+なし
+
+## チャレンジ要素一覧
+<https://docs.google.com/spreadsheets/d/1E4Quehglf9PxM1XTE-ft2X5-hJ5dmoJhsI-UJlgzVmY/edit#gid=0>
+
+## 開発環境
+- OS：Linux(CentOS)
+- 言語：HTML,CSS,JavaScript,Ruby,SQL
+- フレームワーク：Ruby on Rails
+- JSライブラリ：jQuery
+- JSフレームワーク: Vue.js
+- IDE：Cloud9
