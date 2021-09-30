@@ -9,6 +9,15 @@ class BooksController < ApplicationController
       sent_tags = params[:book][:tag_name].split(',')
       @book.save_tag(sent_tags)
 
+      @tag_relations = @book.tags.map do |book_tag|
+        @top_tag.tag_relations.find_or_create_by(tag_id: book_tag.id)
+      end
+      @tag_relations.map do |tag|
+        tag.update(registration_num: tag.registration_num += 1)
+      end
+      # TagRelation.update_all(registration_num: registration_num += 1)
+      # @tag_relations.update_all("registration_num = registration_num + 1")
+
       redirect_to book_path(@book)
       flash[:notice] = "You have created book successfully."
     else
@@ -49,14 +58,20 @@ class BooksController < ApplicationController
       @tag_names = params[:content].split(',')
       @tags = Tag.where(tag_name: @tag_names)
       if @tag_names.count == 1
+        @tag = Tag.find_by(tag_name: params[:content])
+        @top_tag = TopTag.find_by(name: params[:content])
         if params[:page_flag] == 'change2'
-          @tag = Tag.find_by(tag_name: params[:content])
           @books = @tag.books.page(params[:page]).per(7)
-          render :flag and return
         else
-          @top_tag = TopTag.find_by(name: params[:content])
           @books = @top_tag.books.page(params[:page]).per(7)
         end
+        top_tag_results = @top_tag.tag_relations.all.map do |relation|
+        { tag: relation.tag.tag_name, count: relation.registration_num}
+        end
+        @tag.tag_relations.all.map do |relation|
+          top_tag_results << { tag: relation.top_tag.name, count: relation.registration_num}
+        end
+        @results = top_tag_results.uniq
       else
         @tag_maps = TagMap.where(tag_id: @tags)
         @book_ids = @tag_maps.pluck(:book_id)
@@ -67,16 +82,14 @@ class BooksController < ApplicationController
           sort_ids = select_book_ids.sort {|(_, v1), (_, v2)| v2 <=> v1 }.to_h
           books = Book.where(id: sort_ids.keys).sort_by{ |a| sort_ids.keys.index(a.id)}
           @books = Kaminari.paginate_array(books).page(params[:page]).per(7)
-          render :flag and return
         else
           @uniq_book_ids = @book_ids.select{ |e| @book_ids.count(e) >= @tag_names.count  }.uniq
           @books = Book.where(id: @uniq_book_ids).page(params[:page]).per(2)
         end
+        @results = Tag.all.map do |tag|
+          { tag: tag.tag_name, count: tag.books.count }
+        end
       end
-      @results = @tags.all.map do |tag|
-        { tag: tag.tag_name, count: tag.books.count }
-      end
-      render 'layouts/side_index'
       # render {@books}
     elsif params[:sort].present?
       @books = Book.order(params[:sort]).page(params[:page]).per(7)
@@ -86,11 +99,10 @@ class BooksController < ApplicationController
         { tag: tag.tag_name, count: tag.books.count }
       end
     end
-
-    respond_to do |format|
-      format.html
-      format.js
-    end
+    # respond_to do |format|
+    #   format.html
+    #   format.js
+    # end
   end
 
   def show

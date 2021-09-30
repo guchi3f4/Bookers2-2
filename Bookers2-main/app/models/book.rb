@@ -19,7 +19,7 @@ class Book < ApplicationRecord
       TagMap.where(book_id: self.id).destroy_all
     end
 
-    sent_tags.each do |tag|
+    sent_tags.map do |tag|
       book_tag = Tag.find_or_create_by(tag_name: tag)
       self.tags << book_tag
     end

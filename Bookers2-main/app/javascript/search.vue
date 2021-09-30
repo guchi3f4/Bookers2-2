@@ -110,10 +110,10 @@
 
       // 補完項目の選択
       selectTag(index) {
+        setTimeout(() => {
+          this.open = false;
+        }, 300)
         if (this.tags.indexOf(this.allTags[index]) !== -1) {
-          setTimeout(() => {
-            this.open = false;
-          }, 300)
           return this.error = 'このタグはすでに入力済みです'
         }
         this.tags.push(this.allTags[index]);
