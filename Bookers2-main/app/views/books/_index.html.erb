@@ -67,16 +67,16 @@
 
       <div class="col-md-4" id="star_evaluation_<%= book.id %>">
         <script>
-        $('#star_evaluation_<%= book.id %>').empty();
-        $('#star_evaluation_<%= book.id %>').raty({
-          size     : 36,
-          starOff:  '<%= asset_path('star-off.png') %>',
-          starOn : '<%= asset_path('star-on.png') %>',
-          starHalf: '<%= asset_path('star-half.png') %>',
-          half: true,
-          readOnly: true,
-          score: <%= book.evaluation %>
-        });
+          $('#star_evaluation_<%= book.id %>').empty();
+          $('#star_evaluation_<%= book.id %>').raty({
+            size     : 36,
+            starOff:  '<%= asset_path('star-off.png') %>',
+            starOn : '<%= asset_path('star-on.png') %>',
+            starHalf: '<%= asset_path('star-half.png') %>',
+            half: true,
+            readOnly: true,
+            score: <%= book.evaluation %>
+          });
         </script>
       </div>
     </div>

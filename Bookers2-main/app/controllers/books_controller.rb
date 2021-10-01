@@ -32,27 +32,37 @@ class BooksController < ApplicationController
   end
 
   def update
-    @before_top_tag = @book.top_tag
-    if @before_top_tag.present?
-      @before_tag_relations = @before_top_tag.tag_relations.where(tag_id: @book.tags)
-      if @before_tag_relations.present?
-        @before_tag_relations.map do |relation|
-          relation.update(registration_num: relation.registration_num -= 1)
+    # @before_top_tag = @book.top_tag
+    # if @before_top_tag.present?
+    #   @before_tag_relations = @before_top_tag.tag_relations.where(tag_id: @book.tags)
+    #   if @before_tag_relations.present?
+    #     @before_tag_relations.map do |relation|
+    #       relation.update(registration_num: relation.registration_num -= 1)
+    #     end
+    #   end
+    # end
+    @top_tag = TopTag.find_or_create_by(name: params[:name])
+    sent_tags = params[:book][:tag_name].split(',')
+    if @book.update(params_book)
+      @before_top_tag = @book.top_tag
+      if @before_top_tag.present?
+        @before_tag_relations = @before_top_tag.tag_relations.where(tag_id: @book.tags)
+        if @before_tag_relations.present?
+          @before_tag_relations.map do |relation|
+            relation.update(registration_num: relation.registration_num -= 1)
+          end
         end
       end
-    end
-    @top_tag = TopTag.find_or_create_by(name: params[:name])
-    if @book.update(params_book)
-      sent_tags = params[:book][:tag_name].split(',')
       # @tag_maps = @book.save_tag(sent_tags)
       if @book.tags.present?
-        TagMap.where(book_id:  @tag_maps.id).destroy_all
+        TagMap.where(book_id:  @book.id).destroy_all
       end
 
       @tag_maps = sent_tags.map do |tag|
         book_tag = Tag.find_or_create_by(tag_name: tag)
         @book.tag_maps.find_or_create_by(tag_id: book_tag.id)
       end
+
       @tag_relations = @tag_maps.map do |tag_map|
         @top_tag.tag_relations.find_or_create_by(tag_id: tag_map.tag_id)
       end

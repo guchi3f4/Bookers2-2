@@ -1,0 +1,18 @@
+2021-10-01 14:15:10 [ERROR]: log level: info
+2021-10-01 14:15:10 [INFO]: Retrieving AWS endpoint data
+2021-10-01 14:15:10 [INFO]: OS:  Linux x64 4.14.243-185.433.amzn2.x86_64
+2021-10-01 14:15:10 [INFO]: AWS Cloud9 Extension Host Version:  1.42.0AWS Toolkit Version:  1.29.0
+2021-10-01 14:15:10 [ERROR]: Error loading https://raw.githubusercontent.com/awslabs/goformation/v5.2.9/schema/sam.schema.json: [Error: ENOSPC: no space left on device, write
+	at Object.writeSync (fs.js:679:3)
+	at writeFileSync (fs.js:1393:26)
+	at Object.onSuccess (/opt/c9/dependencies/aws-toolkit-vscode/7b189c3cb35857025e8d802ab44d3bee916b1960ee8e45a41aaffd64dc8ccabaa4eb79411dc7b731b412b318b8003ac0802e978623f1ab6cdb6a2254427abf99/dist/extension.js:2584:7615)
+	at Tg.get (/opt/c9/dependencies/aws-toolkit-vscode/7b189c3cb35857025e8d802ab44d3bee916b1960ee8e45a41aaffd64dc8ccabaa4eb79411dc7b731b412b318b8003ac0802e978623f1ab6cdb6a2254427abf99/dist/extension.js:2187:232)
+	at processTicksAndRejections (internal/process/task_queues.js:97:5)
+	at async J2.tryGet (/opt/c9/dependencies/aws-toolkit-vscode/7b189c3cb35857025e8d802ab44d3bee916b1960ee8e45a41aaffd64dc8ccabaa4eb79411dc7b731b412b318b8003ac0802e978623f1ab6cdb6a2254427abf99/dist/extension.js:2184:270)
+	at async J2.get (/opt/c9/dependencies/aws-toolkit-vscode/7b189c3cb35857025e8d802ab44d3bee916b1960ee8e45a41aaffd64dc8ccabaa4eb79411dc7b731b412b318b8003ac0802e978623f1ab6cdb6a2254427abf99/dist/extension.js:2184:117)
+	at async y8 (/opt/c9/dependencies/aws-toolkit-vscode/7b189c3cb35857025e8d802ab44d3bee916b1960ee8e45a41aaffd64dc8ccabaa4eb79411dc7b731b412b318b8003ac0802e978623f1ab6cdb6a2254427abf99/dist/extension.js:2584:5889)] {
+  errno: -28,
+  syscall: 'write',
+  code: 'ENOSPC'
+}
+2021-10-01 14:20:10 [INFO]: Successfully sent a telemetry batch of 3
