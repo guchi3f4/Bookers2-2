@@ -29,4 +29,5 @@ class Book < ApplicationRecord
   validates :body,
     presence: true,
     length: { maximum: 200 }
+  # validates :tags, :presence => {:message => 'を選択して下さい'}
 end

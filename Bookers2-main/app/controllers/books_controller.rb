@@ -2,11 +2,12 @@ class BooksController < ApplicationController
   before_action :ensure_correct_user, only: [:edit, :update, :destroy]
 
   def create
-    @top_tag = TopTag.find_or_create_by(name: params[:name])
-    @book = Book.new(params_book)
-    @book.user = current_user
-    if @book.save
+    ApplicationRecord.transaction do
+      @top_tag = TopTag.find_or_create_by(name: params[:name])
       sent_tags = params[:book][:tag_name].split(',')
+      @book = Book.new(params_book)
+      @book.user = current_user
+      @book.save!
       @tag_maps = @book.save_tag(sent_tags)
 
       @tag_relations = @tag_maps.map do |tag_map|
@@ -17,13 +18,13 @@ class BooksController < ApplicationController
       end
       # TagRelation.update_all(registration_num: registration_num += 1)
       # @tag_relations.update_all("registration_num = registration_num + 1")
-
-      redirect_to book_path(@book)
-      flash[:notice] = "You have created book successfully."
-    else
-      @books = Book.order(id: 'DESC').page(params[:page]).per(10)
-      render :index
     end
+    redirect_to book_path(@book)
+    flash[:notice] = "You have created book successfully."
+
+  rescue ActiveRecord::RecordInvalid
+    @books = Book.order(id: 'DESC').page(params[:page]).per(10)
+    render :index
   end
 
   def edit
@@ -161,6 +162,7 @@ class BooksController < ApplicationController
         @room = @entry.room
       else
         @new_room = Room.new
+        @new_entry = Entry.new
       end
     end
   end

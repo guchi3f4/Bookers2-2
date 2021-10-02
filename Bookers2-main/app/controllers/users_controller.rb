@@ -21,7 +21,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @books = @user.books.order(id: "DESC")
+    @books = @user.books.order(id: 'DESC').page(params[:page]).per(7)
 
     @today_book = @books.where(created_at: Time.zone.now.all_day).count
     @yesterday_book = @books.where(created_at: 1.day.ago.all_day).count
